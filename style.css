@@ -1349,13 +1349,28 @@ footer {
 
     .projects-grid,
     .skills-grid,
-    .contact-methods,
     .timeline,
     .about-grid,
     .education-grid,
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 20px;
+    }
+
+    .contact-methods {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .contact-method-card {
+        min-width: unset;
+        padding: 20px 15px;
+    }
+    
+    .contact-method-card span {
+        word-break: break-word;
+        font-size: 0.85rem;
     }
 
     .about-achievements {
