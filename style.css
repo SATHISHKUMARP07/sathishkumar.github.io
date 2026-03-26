@@ -1364,13 +1364,22 @@ footer {
     }
 
     .contact-method-card {
-        min-width: unset;
-        padding: 20px 15px;
+        min-width: 0 !important;
+        max-width: 100%;
+        padding: 15px;
     }
-    
+
+    .contact-method-card div {
+        min-width: 0;
+        width: 100%;
+    }
+
     .contact-method-card span {
-        word-break: break-word;
+        display: block;
+        word-break: break-all;
+        overflow-wrap: anywhere;
         font-size: 0.85rem;
+        white-space: normal;
     }
 
     .about-achievements {
