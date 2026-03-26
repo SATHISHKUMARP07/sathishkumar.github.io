@@ -5,37 +5,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
 
-    // Only initialize custom cursor on non-touch devices
-    if (window.matchMedia("(pointer: fine)").matches) {
-        window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
+    // Detect touch inputs to disable custom cursor on touch screens seamlessly
+    let isTouchDevice = false;
+    window.addEventListener('touchstart', () => {
+        isTouchDevice = true;
+        cursorDot.style.display = 'none';
+        cursorOutline.style.display = 'none';
+        document.body.style.cursor = 'auto'; // Restore default pointer
+    }, { once: true }); // Only runs once on first tap
 
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
+    window.addEventListener('mousemove', (e) => {
+        if (isTouchDevice) return;
 
-            // Adding a small delay for the outline for a smooth trailing effect
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+        const posX = e.clientX;
+        const posY = e.clientY;
+
+        cursorDot.style.left = `${posX}px`;
+        cursorDot.style.top = `${posY}px`;
+
+        cursorOutline.animate({
+            left: `${posX}px`,
+            top: `${posY}px`
+        }, { duration: 500, fill: "forwards" });
+    });
+
+    const hoverElements = document.querySelectorAll('a, button, .project-card, .timeline-content, .skill-category');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            if (isTouchDevice) return;
+            cursorOutline.classList.add('cursor-hover');
+            cursorDot.style.transform = "translate(-50%, -50%) scale(0.5)";
         });
 
-        // Add hover effect for links and buttons
-        const hoverElements = document.querySelectorAll('a, button, .project-card, .timeline-content, .skill-category');
-
-        hoverElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorOutline.classList.add('cursor-hover');
-                cursorDot.style.transform = "translate(-50%, -50%) scale(0.5)";
-            });
-
-            el.addEventListener('mouseleave', () => {
-                cursorOutline.classList.remove('cursor-hover');
-                cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
-            });
+        el.addEventListener('mouseleave', () => {
+            if (isTouchDevice) return;
+            cursorOutline.classList.remove('cursor-hover');
+            cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
         });
-    }
+    });
 
     /*--------------------------------------------------------------
     # Navbar Scroll Effect
@@ -63,9 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navLinks.classList.contains('active')) {
             icon.classList.remove('fa-bars');
             icon.classList.add('fa-times');
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
         } else {
             icon.classList.remove('fa-times');
             icon.classList.add('fa-bars');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
         }
     });
 
@@ -76,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const icon = hamburger.querySelector('i');
             icon.classList.remove('fa-times');
             icon.classList.add('fa-bars');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
         });
     });
 
@@ -205,41 +218,42 @@ document.addEventListener('DOMContentLoaded', () => {
     --------------------------------------------------------------*/
     const cards = document.querySelectorAll('.project-card, .text-card, .skill-category, .contact-method-card, .edu-card');
 
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-        cards.forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+    cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+            if (isTouchDevice) return;
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
 
-                // 3D Tilt calculations
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -5;
-                const rotateY = ((x - centerX) / centerX) * 5;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -12;
+            const rotateY = ((x - centerX) / centerX) * 12;
 
-                if (card.classList.contains('project-card') || card.classList.contains('edu-card') || card.classList.contains('text-card')) {
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                }
-            });
-
-            card.addEventListener('mouseleave', () => {
-                if (card.classList.contains('project-card') || card.classList.contains('edu-card') || card.classList.contains('text-card')) {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s ease';
-                }
-            });
-
-            card.addEventListener('mouseenter', () => {
-                if (card.classList.contains('project-card') || card.classList.contains('edu-card') || card.classList.contains('text-card')) {
-                    card.style.transition = 'none';
-                }
-            });
+            if (card.classList.contains('project-card') || card.classList.contains('edu-card') || card.classList.contains('text-card')) {
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+            }
         });
-    }
+
+        card.addEventListener('mouseleave', () => {
+            if (isTouchDevice) return;
+            if (card.classList.contains('project-card') || card.classList.contains('edu-card') || card.classList.contains('text-card')) {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+            }
+            card.style.setProperty('--mouse-x', `-1000px`); // Push glow off screen
+        });
+
+        card.addEventListener('mouseenter', () => {
+            if (isTouchDevice) return;
+            if (card.classList.contains('project-card') || card.classList.contains('edu-card') || card.classList.contains('text-card')) {
+                card.style.transition = 'transform 0.1s ease-out';
+            }
+        });
+    });
 
     /*--------------------------------------------------------------
     # Scroll Progress Bar

@@ -1034,12 +1034,11 @@ footer {
     top: 70px;
     left: 0;
     width: 100%;
-    background: var(--bg-surface);
+    background: var(--bg-main);
     padding: 20px;
     border-bottom: 1px solid var(--border-color);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 
 /*--------------------------------------------------------------
