@@ -975,13 +975,46 @@ footer {
 
 @media (max-width: 768px) {
 
-    .nav-links,
     .nav-actions .btn {
         display: none;
     }
 
     .hamburger {
         display: block;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 65%;
+        height: 100vh;
+        background: rgba(2, 6, 23, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+        padding: 90px 30px 30px;
+        gap: 30px;
+        transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+        z-index: 999;
+    }
+
+    /* Auto dark overlay triggered by JS body lock */
+    body[style*="overflow: hidden"]::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 998;
     }
 
     .hero {
@@ -1028,17 +1061,7 @@ footer {
 
 /* Mobile Menu Active State */
 .nav-links.active {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    width: 100%;
-    background: var(--bg-main);
-    padding: 20px;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    right: 0 !important;
 }
 
 /*--------------------------------------------------------------
