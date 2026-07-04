@@ -14,8 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.cursor = 'auto'; // Restore default pointer
     }, { once: true }); // Only runs once on first tap
 
+    let hasMoved = false;
     window.addEventListener('mousemove', (e) => {
         if (isTouchDevice) return;
+
+        if (!hasMoved) {
+            cursorDot.style.opacity = '1';
+            cursorOutline.style.opacity = '1';
+            hasMoved = true;
+        }
 
         const posX = e.clientX;
         const posY = e.clientY;

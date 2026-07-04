@@ -2,17 +2,17 @@
 # Variables & Theme
 --------------------------------------------------------------*/
 :root {
-    --bg-main: #020617;
-    --bg-surface: rgba(15, 23, 42, 0.6);
-    --bg-surface-hover: rgba(30, 41, 59, 0.8);
+    --bg-main: #030712;
+    --bg-surface: rgba(17, 24, 39, 0.7);
+    --bg-surface-hover: rgba(31, 41, 55, 0.85);
     --primary: #38bdf8;
     --primary-dark: #0284c7;
     --secondary: #818cf8;
     --text-primary: #ffffff;
-    --text-secondary: #a1a1aa;
-    --text-muted: #71717a;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --border-glow: rgba(59, 130, 246, 0.3);
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.12);
+    --border-glow: rgba(56, 189, 248, 0.45);
 
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Outfit', sans-serif;
@@ -66,6 +66,8 @@ body {
     border-radius: 50%;
     z-index: 9999;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .cursor-dot {
@@ -77,8 +79,8 @@ body {
 .cursor-outline {
     width: 30px;
     height: 30px;
-    border: 1px solid rgba(59, 130, 246, 0.5);
-    transition: width 0.2s, height 0.2s, background-color 0.2s;
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    transition: opacity 0.3s ease, width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
 }
 
 /* Hover effect via JS will add this class */
@@ -371,16 +373,21 @@ img {
 }
 
 .hero-title {
-    font-size: 4rem;
-    line-height: 1.1;
+    font-size: clamp(2.2rem, 6.5vw, 4rem);
+    line-height: 1.15;
     margin-bottom: 24px;
 }
 
+.hero-name {
+    white-space: nowrap;
+}
+
 .typewriter-container {
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 4vw, 2rem);
     color: var(--text-secondary);
-    display: block;
+    display: inline-block;
     margin-top: 8px;
+    white-space: nowrap;
 }
 
 .cursor {
@@ -669,9 +676,10 @@ img {
 # Projects Section
 --------------------------------------------------------------*/
 .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 30px;
+    justify-content: center;
 }
 
 .project-card {
@@ -682,6 +690,8 @@ img {
     transition: var(--transition);
     display: flex;
     flex-direction: column;
+    flex: 1 1 340px;
+    max-width: 380px;
 }
 
 .project-card:hover {
@@ -748,23 +758,34 @@ img {
 .project-tech {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
     margin-top: auto;
 }
 
 .project-tech span {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-family: var(--font-mono);
-    color: var(--text-secondary);
+    color: var(--primary);
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.15);
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.project-card:hover .project-tech span {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.35);
 }
 
 /*--------------------------------------------------------------
 # Skills Section
 --------------------------------------------------------------*/
 .skills-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 24px;
+    justify-content: center;
 }
 
 .skill-category {
@@ -773,6 +794,8 @@ img {
     border-radius: var(--border-radius-lg);
     padding: 30px;
     transition: var(--transition);
+    flex: 1 1 260px;
+    max-width: 320px;
 }
 
 .skill-category:hover {
@@ -823,9 +846,10 @@ img {
 # Education Section
 --------------------------------------------------------------*/
 .education-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 24px;
+    justify-content: center;
 }
 
 .edu-card {
@@ -833,6 +857,8 @@ img {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
     padding: 30px;
+    flex: 1 1 300px;
+    max-width: 360px;
 }
 
 .edu-year {
@@ -1032,15 +1058,16 @@ footer {
     }
 
     .timeline::before {
-        left: 15px;
+        display: none;
     }
 
     .timeline-dot {
-        left: 6px;
+        display: none;
     }
 
     .timeline-item {
-        padding-left: 50px;
+        padding-left: 0;
+        margin-bottom: 30px;
     }
 
     .contact-box {
@@ -1379,6 +1406,13 @@ footer {
         gap: 20px;
     }
 
+    .project-card,
+    .skill-category,
+    .edu-card {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+
     .contact-methods {
         display: grid;
         grid-template-columns: 1fr;
@@ -1436,5 +1470,15 @@ footer {
     .contact-method-card::before,
     .edu-card::before {
         display: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-method-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px 15px;
+        gap: 12px;
     }
 }
